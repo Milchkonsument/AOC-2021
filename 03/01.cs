@@ -6,9 +6,13 @@ using System.Collections.Generic;
 static class Prog 
 {
 	static void Main() {
-		(int h, int d) pos = (0,0);
-		File.ReadAllLines("in").Select(s => (s.Split(' ')[0], int.Parse(s.Split(' ')[1]))).ToList().ForEach(c => pos = pos.Add((c.Item1 == "forward" ? c.Item2 : 0, c.Item1 == "down" ? c.Item2 : c.Item1 == "up" ? -c.Item2 : 0)));
-		Console.WriteLine($"hor {pos.Item1} dep {pos.Item2} -> {pos.Item1 * pos.Item2}");
+		List<List<int>> val = File.ReadAllLines("in").Select(s => s.Select(c => int.Parse(c.ToString())).ToList()).ToList();
+		int[] cnt = new int[val[0].Count];
+		
+		for(int i = 0; i < val[0].Count; i++)
+			for(int k = 0; k < val.Count; k++)
+				cnt[i] += val[k][i];
+
+		Console.WriteLine(Convert.ToInt32(cnt.Select(i => i > val.Count/2 ? "1" : "0").Aggregate((a,b) => a+b), 2) * Convert.ToInt32(cnt.Select(i => i < val.Count /2 ? "1" : "0").Aggregate((a,b) => a+b), 2));
 	}
-	public static (int,int) Add(this (int, int) l, (int,int) r) => (r.Item1 + l.Item1, r.Item2 + l.Item2);
 }
